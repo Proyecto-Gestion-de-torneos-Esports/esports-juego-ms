@@ -1,9 +1,12 @@
 package com.juego.microservicio_juego.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +21,6 @@ public class JuegoRequestDTO {
 
     private String distribuidor;
 
-    @NotBlank(message = "La plataforma no puede ser vacio ni nulo")
-    private Long idPlataforma;
+    @NotNull(message = "La plataforma no puede ser vacio ni nulo")
+    private Set<Long> idPlataformas;
 }

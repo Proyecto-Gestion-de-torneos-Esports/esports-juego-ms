@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api/plataforma")
 public class PlataformaController {
 
     private final PlataformaService plataformaService;

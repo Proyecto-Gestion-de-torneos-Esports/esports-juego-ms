@@ -17,6 +17,6 @@ public class JuegoResponseDTO {
     private String nombre;
     private String genero;
     private String distribuidor;
-    private Set<Plataforma> plataformas;
+    private Set<Long> plataformaId;
 
 }
