@@ -12,6 +12,24 @@ import java.util.HashMap;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(JuegoNotFoundException.class)
+    public ResponseEntity<?> manejoJuegoNoEncontrado(JuegoNotFoundException e){
+        HashMap<String, Object> error = new HashMap<>();
+        error.put("Estado",404);
+        error.put("Mensaje",e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PlataformaNotFoundException.class)
+    public ResponseEntity<?> manejoPlataformaNoEncontrada(PlataformaNotFoundException e){
+        HashMap<String, Object> error = new HashMap<>();
+        error.put("Estado",404);
+        error.put("Mensaje",e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> manejoValidaciones (MethodArgumentNotValidException e){
         HashMap<Object, String> errores = new HashMap<>();
@@ -19,16 +37,6 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors().forEach(error-> errores.put(error.getField(), error.getDefaultMessage()));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errores);
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> manejoExcepciones(RuntimeException e){
-        HashMap<Object, Object> error = new HashMap<>();
-
-        error.put("estado",400);
-        error.put("mensaje", e.getMessage());
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(Exception.class)

@@ -21,6 +21,11 @@ public class PlataformaController {
         return plataformaService.obtenerPlataformas();
     }
 
+    @GetMapping("/{id}")
+    public Optional<Plataforma> buscarPorId(@PathVariable Long id){
+        return plataformaService.obtenerPorId(id);
+    }
+
     @PostMapping
     public Plataforma agregarPlataforma(@Valid @RequestBody Plataforma plataforma){
         return plataformaService.agregarPlataforma(plataforma);

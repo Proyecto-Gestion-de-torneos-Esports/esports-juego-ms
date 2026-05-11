@@ -2,9 +2,10 @@ package com.juego.microservicio_juego.service;
 
 import com.juego.microservicio_juego.client.AuditoriaClient;
 import com.juego.microservicio_juego.dto.AuditoriaRequestDTO;
-import com.juego.microservicio_juego.dto.AuditoriaResponseDTO;
 import com.juego.microservicio_juego.dto.JuegoRequestDTO;
 import com.juego.microservicio_juego.dto.JuegoResponseDTO;
+import com.juego.microservicio_juego.exception.JuegoNotFoundException;
+import com.juego.microservicio_juego.exception.PlataformaNotFoundException;
 import com.juego.microservicio_juego.model.Juego;
 import com.juego.microservicio_juego.model.Plataforma;
 import com.juego.microservicio_juego.repository.JuegoRepository;
@@ -52,7 +53,7 @@ public class JuegoService {
     public JuegoResponseDTO agregarJuego(JuegoRequestDTO dto){
         Set<Plataforma> idPlataforma = dto.getIdPlataformas().stream()
                 .map(plataformaId -> plataformaRepository.findById(plataformaId)
-                        .orElseThrow(()-> new RuntimeException("Plataforma no encontrada: "+plataformaId)))
+                        .orElseThrow(()-> new PlataformaNotFoundException("Plataforma no encontrada: "+plataformaId)))
                 .collect(Collectors.toSet());
 
         Juego juego = new Juego(null, dto.getNombre(), dto.getGenero(), dto.getDistribuidor(), idPlataforma);
@@ -62,27 +63,38 @@ public class JuegoService {
     }
 
     public Optional<JuegoResponseDTO> modificarJuego(Long id, JuegoRequestDTO dto){
-        return juegoRepository.findById(id).map(existente -> {
-            existente.setNombre(dto.getNombre());
-            existente.setGenero(dto.getGenero());
-            existente.setDistribuidor(dto.getDistribuidor());
+        Optional<Juego> juego = juegoRepository.findById(id);
 
-            Set<Plataforma> idPlataforma = dto.getIdPlataformas().stream()
-                    .map(plataformaId-> plataformaRepository.findById(plataformaId).
-                            orElseThrow(() -> new RuntimeException("Plataforma no encontrada: "+plataformaId)))
-                    .collect(Collectors.toSet());
+        if(juego.isPresent()){
+            return juego.map(existente -> {
+                existente.setNombre(dto.getNombre());
+                existente.setGenero(dto.getGenero());
+                existente.setDistribuidor(dto.getDistribuidor());
 
-            existente.setPlataformas(idPlataforma);
-            log.info("Juego modificado con exito!");
-            generarAuditoria("Juego modificado");
-            return mapToDTO(juegoRepository.save(existente));
-        });
+                Set<Plataforma> idPlataforma = dto.getIdPlataformas().stream()
+                        .map(plataformaId-> plataformaRepository.findById(plataformaId).
+                                orElseThrow(() -> new PlataformaNotFoundException("Plataforma con id "+plataformaId+ " no encontrada")))
+                        .collect(Collectors.toSet());
+
+                existente.setPlataformas(idPlataforma);
+                log.info("Juego modificado con exito!");
+                generarAuditoria("Juego modificado");
+                return mapToDTO(juegoRepository.save(existente));
+            });
+        }
+        throw new JuegoNotFoundException("Juego con id "+id+" no encontrado");
+
     }
 
     public void eliminarJuego(Long id){
-        juegoRepository.deleteById(id);
-        log.info("Juego eliminado con exito!");
-        generarAuditoria("Juego eliminado");
+        Optional<Juego> juego = juegoRepository.findById(id);
+
+        if(juego.isPresent()){
+            juegoRepository.deleteById(id);
+            log.info("Juego eliminado con exito!");
+            generarAuditoria("Juego eliminado");
+        }
+        throw new JuegoNotFoundException("Juego con id "+id+" no encontrado");
     }
 
     public void generarAuditoria(String detalle){
@@ -90,8 +102,7 @@ public class JuegoService {
         LocalDate ahora = LocalDate.now();
         dto.setDetalle(detalle);
         dto.setFecha(ahora);
-
-        AuditoriaResponseDTO respuesta = auditoriaClient.generarAuditoria(dto);
+        auditoriaClient.generarAuditoria(dto);
     }
 
 

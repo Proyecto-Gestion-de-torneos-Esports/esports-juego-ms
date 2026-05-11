@@ -22,6 +22,11 @@ public class JuegoController {
         return juegoService.obtenerJuegos();
     }
 
+    @GetMapping("/{id}")
+    public Optional<JuegoResponseDTO> buscarPorId(@PathVariable Long id){
+        return juegoService.obtenerJuegoPorId(id);
+    }
+
     @PostMapping
     public JuegoResponseDTO guardarJuego(@Valid @RequestBody JuegoRequestDTO juego){
         return juegoService.agregarJuego(juego);

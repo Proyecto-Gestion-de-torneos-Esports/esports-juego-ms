@@ -1,5 +1,6 @@
 package com.juego.microservicio_juego.service;
 
+import com.juego.microservicio_juego.exception.PlataformaNotFoundException;
 import com.juego.microservicio_juego.model.Plataforma;
 import com.juego.microservicio_juego.repository.PlataformaRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,22 @@ public class PlataformaService {
     }
 
     public Optional<Plataforma> obtenerPorId(Long id){
-        return plataformaRepository.findById(id);
+        Optional<Plataforma> plataforma = plataformaRepository.findById(id);
+
+        if(plataforma.isPresent()){
+            return plataforma;
+        }
+        throw new PlataformaNotFoundException("Plataforma con id "+id+" no encontrada");
     }
 
-    public void eliminarPlataforma(Long id){
-        plataformaRepository.deleteById(id);
-    }
+    public void eliminarPlataforma(Long id) {
+        Optional<Plataforma> plataforma = plataformaRepository.findById(id);
 
+        if (plataforma.isPresent()) {
+            plataformaRepository.deleteById(id);
+        }
+        throw new PlataformaNotFoundException("Plataforma con id " + id + " no encontrada");
+    }
 
 
 }
