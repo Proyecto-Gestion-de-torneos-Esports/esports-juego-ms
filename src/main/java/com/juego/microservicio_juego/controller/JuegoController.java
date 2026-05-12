@@ -5,10 +5,11 @@ import com.juego.microservicio_juego.dto.JuegoResponseDTO;
 import com.juego.microservicio_juego.service.JuegoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,27 +19,28 @@ public class JuegoController {
     private final JuegoService juegoService;
 
     @GetMapping
-    public List<JuegoResponseDTO> listarJuego(){
-        return juegoService.obtenerJuegos();
+    public ResponseEntity<List<JuegoResponseDTO>> listarJuego(){
+        return ResponseEntity.ok(juegoService.obtenerJuegos());
     }
 
     @GetMapping("/{id}")
-    public Optional<JuegoResponseDTO> buscarPorId(@PathVariable Long id){
-        return juegoService.obtenerJuegoPorId(id);
+    public ResponseEntity<JuegoResponseDTO> buscarPorId(@PathVariable Long id){
+        return ResponseEntity.ok(juegoService.obtenerJuegoPorId(id));
     }
 
     @PostMapping
-    public JuegoResponseDTO guardarJuego(@Valid @RequestBody JuegoRequestDTO juego){
-        return juegoService.agregarJuego(juego);
+    public ResponseEntity<JuegoResponseDTO> guardarJuego(@Valid @RequestBody JuegoRequestDTO juego){
+        return ResponseEntity.status(HttpStatus.CREATED).body(juegoService.agregarJuego(juego));
     }
 
     @PutMapping("{id}")
-    public Optional<JuegoResponseDTO> modificarJuego(@PathVariable Long id, @Valid @RequestBody JuegoRequestDTO juego){
-        return juegoService.modificarJuego(id, juego);
+    public ResponseEntity<JuegoResponseDTO> modificarJuego(@PathVariable Long id, @Valid @RequestBody JuegoRequestDTO juego){
+        return ResponseEntity.ok(juegoService.modificarJuego(id, juego));
     }
 
     @DeleteMapping("{id}")
-    public void eliminarJuego(@PathVariable Long id){
+    public ResponseEntity<?> eliminarJuego(@PathVariable Long id){
         juegoService.eliminarJuego(id);
+        return ResponseEntity.noContent().build();
     }
 }

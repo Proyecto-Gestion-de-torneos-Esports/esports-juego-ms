@@ -46,8 +46,13 @@ public class JuegoService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<JuegoResponseDTO> obtenerJuegoPorId(Long id){
-        return juegoRepository.findById(id).map(this::mapToDTO);
+    public JuegoResponseDTO obtenerJuegoPorId(Long id){
+        Optional<Juego> juego = juegoRepository.findById(id);
+
+        if(juego.isPresent()){
+            return juego.map(this::mapToDTO).orElseThrow();
+        }
+        throw new JuegoNotFoundException("Juego con id "+id+" no encontrado");
     }
 
     public JuegoResponseDTO agregarJuego(JuegoRequestDTO dto){
@@ -62,7 +67,7 @@ public class JuegoService {
         return mapToDTO(juegoRepository.save(juego));
     }
 
-    public Optional<JuegoResponseDTO> modificarJuego(Long id, JuegoRequestDTO dto){
+    public JuegoResponseDTO modificarJuego(Long id, JuegoRequestDTO dto){
         Optional<Juego> juego = juegoRepository.findById(id);
 
         if(juego.isPresent()){
@@ -80,7 +85,7 @@ public class JuegoService {
                 log.info("Juego modificado con exito!");
                 generarAuditoria("Juego modificado");
                 return mapToDTO(juegoRepository.save(existente));
-            });
+            }).orElseThrow();
         }
         throw new JuegoNotFoundException("Juego con id "+id+" no encontrado");
 
