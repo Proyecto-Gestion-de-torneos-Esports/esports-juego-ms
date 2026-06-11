@@ -53,7 +53,9 @@ public class GlobalExceptionHandler {
         HashMap<Object, Object> error = new HashMap<>();
 
         error.put("estado",500);
-        error.put("mensaje","Error interno en el servidor");
+        error.put("mensaje",e.getMessage());
+
+        //error.put("mensaje","Error interno en el servidor");
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }

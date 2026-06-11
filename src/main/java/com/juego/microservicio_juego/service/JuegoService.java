@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,6 @@ public class JuegoService {
     private final JuegoRepository juegoRepository;
     private final PlataformaRepository plataformaRepository;
     private final AuditoriaClient auditoriaClient;
-
     private JuegoResponseDTO mapToDTO(Juego juego){
         return new JuegoResponseDTO(
             juego.getIdJuego(),
@@ -106,6 +106,7 @@ public class JuegoService {
             juegoRepository.deleteById(id);
             log.info("Juego eliminado con exito!");
             generarAuditoria("Juego eliminado");
+            return;
         }
         log.warn("Error al eliminar, juego con id {} no encontrado",id);
         throw new JuegoNotFoundException("Juego con id "+id+" no encontrado");
