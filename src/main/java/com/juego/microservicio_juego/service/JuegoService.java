@@ -67,7 +67,7 @@ public class JuegoService {
                 .collect(Collectors.toSet());
 
         Juego juego = new Juego(null, dto.getNombre(), dto.getGenero(), dto.getDistribuidor(), idPlataforma);
-        log.info("Juego agregadc con exito!");
+        log.info("Juego agregado con exito!");
         generarAuditoria("Se agrego un juego");
         return mapToDTO(juegoRepository.save(juego));
     }

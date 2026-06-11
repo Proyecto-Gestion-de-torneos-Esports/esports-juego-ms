@@ -1,6 +1,7 @@
 package com.juego.microservicio_juego.exception;
 
 
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,6 +38,14 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors().forEach(error-> errores.put(error.getField(), error.getDefaultMessage()));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errores);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<?> manejoConexion(FeignException e){
+        HashMap<String, Object> error = new HashMap<>();
+        error.put("Estado",503);
+        error.put("Mensaje","Microservicio no disponible");
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
     }
 
     @ExceptionHandler(Exception.class)
