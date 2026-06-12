@@ -46,6 +46,7 @@ public class PlataformaService {
         if (plataforma.isPresent()) {
             log.info("Plataforma con id {} encontrada y eliminada con exito",id);
             plataformaRepository.deleteById(id);
+            return;
         }
         log.warn("Error al eliminar, plataforma con id {} no encontrada",id);
         throw new PlataformaNotFoundException("Plataforma con id " + id + " no encontrada");
