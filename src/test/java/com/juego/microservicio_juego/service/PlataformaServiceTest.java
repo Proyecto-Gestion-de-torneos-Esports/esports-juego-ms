@@ -1,9 +1,9 @@
-package com.juego.microservicio_juego;
+package com.juego.microservicio_juego.service;
 
 import com.juego.microservicio_juego.exception.PlataformaNotFoundException;
 import com.juego.microservicio_juego.model.Plataforma;
 import com.juego.microservicio_juego.repository.PlataformaRepository;
-import com.juego.microservicio_juego.service.PlataformaService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,10 +27,17 @@ public class PlataformaServiceTest {
     @InjectMocks
     private PlataformaService plataformaService;
 
+    private Plataforma plat;
+
+    @BeforeEach
+    void setUp(){
+        plat = new Plataforma();
+        plat.setIdPlataforma(1L);
+        plat.setNombrePlataforma("PC");
+    }
+
     @Test
     void testObtenerPlataformas(){
-        Plataforma plat = new Plataforma(1L, "PC");
-
         when(plataformaRepository.findAll()).thenReturn(List.of(plat));
 
         List<Plataforma> plataformas = plataformaService.obtenerPlataformas();
@@ -41,7 +48,6 @@ public class PlataformaServiceTest {
 
     @Test
     void testBuscarPorId(){
-        Plataforma plat = new Plataforma(1L, "PC");
         Long id = 1L;
         when(plataformaRepository.findById(id)).thenReturn(Optional.of(plat));
 
@@ -56,17 +62,15 @@ public class PlataformaServiceTest {
 
     @Test
     void testBuscarPorIdNoEncontrado(){
-        when(plataformaRepository.findById(1L)).thenReturn(Optional.empty());
+        when(plataformaRepository.findById(2L)).thenReturn(Optional.empty());
         assertThrows(
                 PlataformaNotFoundException.class,
-                () -> plataformaService.obtenerPorId(1L));
+                () -> plataformaService.obtenerPorId(2L));
 
-        verify(plataformaRepository).findById(1L);
+        verify(plataformaRepository).findById(2L);
     }
     @Test
     void testAgregarPlataforma(){
-        Plataforma plat = new Plataforma(1L, "PC");
-
         when(plataformaRepository.save(any(Plataforma.class))).thenReturn(plat);
 
         Plataforma plataforma = plataformaService.agregarPlataforma(plat);
@@ -81,7 +85,6 @@ public class PlataformaServiceTest {
     @Test
     void testEliminarPlataforma(){
         Long id = 1L;
-        Plataforma plat = new Plataforma(1L, "PC");
 
         when(plataformaRepository.findById(id)).thenReturn(Optional.of(plat));
 

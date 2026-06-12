@@ -1,4 +1,4 @@
-package com.juego.microservicio_juego;
+package com.juego.microservicio_juego.service;
 
 import com.juego.microservicio_juego.client.AuditoriaClient;
 import com.juego.microservicio_juego.dto.JuegoRequestDTO;
@@ -8,7 +8,6 @@ import com.juego.microservicio_juego.model.Juego;
 import com.juego.microservicio_juego.model.Plataforma;
 import com.juego.microservicio_juego.repository.JuegoRepository;
 import com.juego.microservicio_juego.repository.PlataformaRepository;
-import com.juego.microservicio_juego.service.JuegoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,17 +39,26 @@ public class JuegoServiceTest {
     @InjectMocks
     private JuegoService juegoService;
 
+    private Juego juego;
+    private Plataforma plat;
+
     @BeforeEach
     void setUp(){
+        plat = new Plataforma();
+        plat.setIdPlataforma(1L);
+        plat.setNombrePlataforma("PC");
 
+        juego = new Juego();
+        juego.setIdJuego(1L);
+        juego.setNombre("Counter-Strike");
+        juego.setGenero("FPS");
+        juego.setDistribuidor("Valve");
+        juego.setPlataformas(Set.of(plat));
     }
 
     @Test
     @DisplayName("Busqueda de juegos por id")
     void testObtenerTodos() {
-        Plataforma plat = new Plataforma(null, "PC");
-        Juego juego = new Juego(null, "Counter-Strike", "FPS", "Valve", Set.of(plat));
-
         when(juegoRepository.findAll()).thenReturn(List.of(juego));
 
         List<JuegoResponseDTO> juegos = juegoService.obtenerJuegos();
@@ -62,9 +70,6 @@ public class JuegoServiceTest {
     @Test
     void testBuscarPorId(){
         Long id = 1L;
-        Plataforma plat = new Plataforma(1L, "PC");
-        Juego juego = new Juego(1L, "Counter-Strike", "FPS", "Valve", Set.of(plat));
-
         when(juegoRepository.findById(id)).thenReturn(Optional.of(juego));
 
         JuegoResponseDTO juegos = juegoService.obtenerJuegoPorId(id);
@@ -91,8 +96,6 @@ public class JuegoServiceTest {
 
     @Test
     void testAgregarJuego(){
-        Plataforma plat = new Plataforma(1L, "PC");
-        Juego juego = new Juego(1L, "Counter-Strike", "FPS", "Valve", Set.of(plat));
 
         JuegoRequestDTO juegoRequestDTO = new JuegoRequestDTO();
         juegoRequestDTO.setNombre(juego.getNombre());
@@ -121,8 +124,6 @@ public class JuegoServiceTest {
     @Test
     void testModificarJuego(){
         Long id = 1L;
-        Plataforma plat = new Plataforma(1L, "PC");
-        Juego juego = new Juego(1L, "Counter-Strike", "FPS", "Valve", Set.of(plat));
         Juego juegoModificado = new Juego(1L, "Counter-Strike", "Shooter", "Valve", Set.of(plat));
         JuegoRequestDTO juegoRequestDTO = new JuegoRequestDTO();
         juegoRequestDTO.setNombre(juego.getNombre());
@@ -148,9 +149,6 @@ public class JuegoServiceTest {
     @Test
     void testEliminarJuego(){
         Long id = 1L;
-        Plataforma plat = new Plataforma(1L, "PC");
-        Juego juego = new Juego(1L, "Counter-Strike", "FPS", "Valve", Set.of(plat));
-
         when(juegoRepository.findById(id)).thenReturn(Optional.of(juego));
 
         juegoService.eliminarJuego(id);
