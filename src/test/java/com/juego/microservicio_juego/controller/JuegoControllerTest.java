@@ -8,7 +8,9 @@ import com.juego.microservicio_juego.service.JuegoService;
 import com.juego.microservicio_juego.service.PlataformaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -31,13 +33,13 @@ public class JuegoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @Mock
     private JuegoService juegoService;
 
-    @MockitoBean
+    @Mock
     private PlataformaService plataformaService;
 
-    @MockitoBean
+    @Mock
     private AuditoriaClient auditoriaClient;
 
     private Plataforma plat;
