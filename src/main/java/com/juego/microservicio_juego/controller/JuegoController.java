@@ -3,15 +3,14 @@ package com.juego.microservicio_juego.controller;
 import com.juego.microservicio_juego.assemblers.JuegoModelAssembler;
 import com.juego.microservicio_juego.dto.JuegoRequestDTO;
 import com.juego.microservicio_juego.dto.JuegoResponseDTO;
-import com.juego.microservicio_juego.model.Juego;
-import com.juego.microservicio_juego.model.Plataforma;
+
 import com.juego.microservicio_juego.service.JuegoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

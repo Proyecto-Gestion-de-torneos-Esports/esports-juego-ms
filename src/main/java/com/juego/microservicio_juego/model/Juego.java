@@ -25,7 +25,7 @@ public class Juego {
     @Column(nullable = false, length = 100)
     private String genero;
 
-    @Column(nullable = true, length = 100)
+    @Column(length = 100)
     private String distribuidor;
 
     @ManyToMany

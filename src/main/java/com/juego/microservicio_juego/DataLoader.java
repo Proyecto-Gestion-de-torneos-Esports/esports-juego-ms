@@ -1,6 +1,5 @@
 package com.juego.microservicio_juego;
 
-import com.juego.microservicio_juego.client.AuditoriaClient;
 import com.juego.microservicio_juego.model.Juego;
 import com.juego.microservicio_juego.model.Plataforma;
 import com.juego.microservicio_juego.repository.JuegoRepository;
