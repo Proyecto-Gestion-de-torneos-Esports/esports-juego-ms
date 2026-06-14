@@ -14,6 +14,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class JuegoController {
     private final JuegoService juegoService;
     private final JuegoModelAssembler juegoAssembler;
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ARBITRO') or hasRole('COACH') or hasRole('JUGADOR')")
     @GetMapping
     @Operation(summary = "Listar juegos", description = "Consulta de juegos disponibles")
     public ResponseEntity<?> listarJuego(){
@@ -42,6 +44,7 @@ public class JuegoController {
         return ResponseEntity.status(HttpStatus.OK).body(collectionModel);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ARBITRO') or hasRole('COACH') or hasRole('JUGADOR')")
     @GetMapping("/{id}")
     @Operation(summary = "Busqueda de juegos por su ID", description = "Consulta de un juego en especifico")
     public ResponseEntity<JuegoResponseDTO> buscarPorId(@PathVariable Long id){
@@ -49,6 +52,7 @@ public class JuegoController {
         return ResponseEntity.ok(juegoAssembler.toModel(juego));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Operation(summary = "Agregar un nuevo juego", description = "Registro de un juego validando sus datos de entrada")
     public ResponseEntity<JuegoResponseDTO> guardarJuego(@Valid @RequestBody JuegoRequestDTO juego){
@@ -56,6 +60,7 @@ public class JuegoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(juegoAssembler.toModel(dto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{id}")
     @Operation(summary = "Modificar un juego", description = "Modificacion de un juego usando su ID")
     public ResponseEntity<JuegoResponseDTO> modificarJuego(@PathVariable Long id, @Valid @RequestBody JuegoRequestDTO juego){
@@ -63,6 +68,7 @@ public class JuegoController {
         return ResponseEntity.ok(juegoAssembler.toModel(dto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{id}")
     @Operation(summary = "Eliminar un juego", description = "Eliminar un juego por medio de un ID")
     public ResponseEntity<?> eliminarJuego(@PathVariable Long id){
